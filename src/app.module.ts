@@ -1,6 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import databaseConfig from './common/config/database.config';
@@ -27,11 +25,11 @@ const { NODE_ENV } = process.env;
           database: configService.get<string>('database.name'),
           autoLoadEntities: true,
           synchronize: NODE_ENV !== 'production',
+          migrationsRun: true,
+          migrations: ['src/migrations/**/*.js'],
         };
       },
     }),
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
