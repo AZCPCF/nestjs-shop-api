@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
+import { CatalogModule } from './modules/catalog/catalog.module';
+import { OrderModule } from './modules/order/order.module';
 import databaseConfig from './common/config/database.config';
 
 const { NODE_ENV } = process.env;
@@ -30,6 +34,10 @@ const { NODE_ENV } = process.env;
         };
       },
     }),
+    AuthModule,
+    UserModule,
+    CatalogModule,
+    OrderModule,
   ],
 })
 export class AppModule {}
