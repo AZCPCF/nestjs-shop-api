@@ -20,6 +20,7 @@
     "migration:revert": "npm run typeorm migration:revert",
     "docker:down":"docker-compose down",
     "docker:up":"docker-compose up -d",
+    "docker:buildup":"docker-compose up --build -d",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
