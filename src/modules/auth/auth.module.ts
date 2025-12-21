@@ -3,9 +3,10 @@ import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { PasswordModule } from 'src/modules/password/password.module';
 import { UserModule } from '../user/user.module';
+import { JwtModule } from '../jwt/jwt.module';
 
 @Module({
-  imports: [UserModule, PasswordModule],
+  imports: [UserModule, PasswordModule,JwtModule],
   controllers: [AuthController],
   providers: [AuthService],
 })
