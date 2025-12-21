@@ -1,12 +1,16 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
+import { User } from 'src/entities/user/user.entity';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-  @Get(':id')
-  get(@Param('id') id: string) {
-    console.log(id);
-    return this.authService.get(id);
+  @Post('register')
+  get(
+    @Body('email') email: string,
+    @Body('password') password: string,
+    @Body('displayName') displayName: string,
+  ): Promise<User> {
+    return this.authService.register(email, password, displayName);
   }
 }
