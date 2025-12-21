@@ -24,6 +24,9 @@ export class User {
 
   @Column({ enum: UserEnum })
   role: UserEnum;
+
+  @Column({ nullable: true })
+  refreshToken?: string;
 }
 
 export interface UserPayload {

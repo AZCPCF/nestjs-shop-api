@@ -28,4 +28,9 @@ export class UserService {
     }
     return user;
   }
+
+  async updateRefreshToken(user: User, refreshToken: string): Promise<User> {
+    user.refreshToken = refreshToken;
+    return await this.userRepo.save(user);
+  }
 }
