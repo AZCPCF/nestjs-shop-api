@@ -25,3 +25,11 @@ export class User {
   @Column({ enum: UserEnum })
   role: UserEnum;
 }
+
+export interface UserPayload {
+  sub: string;
+  email: string;
+  displayName: string;
+  isActive: boolean;
+  role: UserEnum;
+}

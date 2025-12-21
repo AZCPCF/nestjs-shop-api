@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { CatalogModule } from './modules/catalog/catalog.module';
 import { OrderModule } from './modules/order/order.module';
 import { HealthModule } from './modules/health/health.module';
+import { JwtModule } from './modules/jwt/jwt.module';
 import databaseConfig from './common/config/database.config';
 
 const { NODE_ENV } = process.env;
@@ -40,6 +41,7 @@ const { NODE_ENV } = process.env;
     CatalogModule,
     OrderModule,
     HealthModule,
+    JwtModule,
   ],
 })
 export class AppModule {}

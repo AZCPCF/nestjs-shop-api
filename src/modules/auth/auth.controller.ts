@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { User } from 'src/entities/user/user.entity';
+import { User, UserPayload } from 'src/entities/user/user.entity';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -11,7 +11,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('displayName') displayName: string,
-  ): Promise<User> {
+  ): Promise<{ payload: UserPayload; accessToken: string }> {
     return this.authService.register(email, password, displayName);
   }
 
@@ -19,8 +19,7 @@ export class AuthController {
   login(
     @Body('email') email: string,
     @Body('password') password: string,
-  ): Promise<User> {
+  ): Promise<{ payload: UserPayload; accessToken: string }> {
     return this.authService.login(email, password);
   }
-  
 }
