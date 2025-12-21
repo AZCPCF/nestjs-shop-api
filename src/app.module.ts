@@ -8,6 +8,7 @@ import { OrderModule } from './modules/order/order.module';
 import { HealthModule } from './modules/health/health.module';
 import { JwtModule } from './modules/jwt/jwt.module';
 import databaseConfig from './common/config/database.config';
+import jwtConfig from './common/config/jwt.config';
 
 const { NODE_ENV } = process.env;
 
@@ -15,7 +16,7 @@ const { NODE_ENV } = process.env;
   imports: [
     ConfigModule.forRoot({
       envFilePath: `.env.${NODE_ENV}`,
-      load: [databaseConfig],
+      load: [databaseConfig, jwtConfig],
       isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
