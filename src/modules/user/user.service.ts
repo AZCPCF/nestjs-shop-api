@@ -21,8 +21,8 @@ export class UserService {
     });
     return await this.userRepo.save(user);
   }
-  async findOne(email: string): Promise<User> {
-    const user = await this.userRepo.findOneBy({ email });
+  async findOne(fields?: Partial<User>): Promise<User> {
+    const user = await this.userRepo.findOneBy(fields);
     if (!user) {
       throw new UnauthorizedException();
     }
