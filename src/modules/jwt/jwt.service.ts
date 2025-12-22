@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService as NestJwtService } from '@nestjs/jwt';
 import { UserPayload } from 'src/entities/user/user.entity';
@@ -16,5 +16,18 @@ export class JwtService {
       expiresIn: '7d',
       secret: this.configService.get('jwt.refresh'),
     });
+  }
+  verifyRefreshToken(token: string): Pick<UserPayload, 'sub'> {
+    const payload = this.nestJwtService.verify<Pick<UserPayload, 'sub'>>(
+      token,
+      {
+        secret: this.configService.get('jwt.refresh'),
+      },
+    );
+    
+    if (!payload.sub) {
+      throw new UnauthorizedException('Invalid Token');
+    }
+    return payload;
   }
 }

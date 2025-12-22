@@ -37,7 +37,7 @@ export class AuthService {
 
     const accessToken = this.jwtService.generateAccessToken(payload);
     const refreshToken = this.jwtService.generateRefreshToken({ sub: user.id });
-    await this.userService.updateRefreshToken(user, refreshToken);
+    await this.userService.updateRefreshToken(user, await this.passwordService.hash(refreshToken));
 
     return { payload, accessToken, refreshToken };
   }
@@ -50,9 +50,11 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   }> {
-    const user = await this.userService.findOne(email);
-    const isValid = await this.passwordService.compare(password, user.password);
-
+    const user = await this.userService.findOne({ email });
+    const isValid = await this.passwordService.validate(
+      password,
+      user.password,
+    );
     if (!isValid) {
       throw new UnauthorizedException();
     }
@@ -66,6 +68,36 @@ export class AuthService {
 
     const accessToken = this.jwtService.generateAccessToken(payload);
     const refreshToken = this.jwtService.generateRefreshToken(payload);
+    await this.userService.updateRefreshToken(
+      user,
+      await this.passwordService.hash(refreshToken),
+    );
+    return { payload, accessToken, refreshToken };
+  }
+
+  async refreshToken(token: string): Promise<{
+    payload: UserPayload;
+    accessToken: string;
+    refreshToken: string;
+  }> {
+    const { sub: id } = this.jwtService.verifyRefreshToken(token);
+    const user = await this.userService.findOne({ id });
+    const isValid = await this.passwordService.validate(
+      token,
+      user.refreshToken,
+    );
+    if (!isValid) {
+      throw new UnauthorizedException();
+    }
+    const payload: UserPayload = {
+      sub: user.id,
+      email: user.email,
+      isActive: user.isActive,
+      displayName: user.displayName,
+      role: user.role,
+    };
+    const accessToken = this.jwtService.generateAccessToken(payload);
+    const refreshToken = this.jwtService.generateRefreshToken({ sub: user.id });
     await this.userService.updateRefreshToken(user, refreshToken);
     return { payload, accessToken, refreshToken };
   }

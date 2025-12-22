@@ -11,7 +11,11 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
     @Body('displayName') displayName: string,
-  ): Promise<{ payload: UserPayload; accessToken: string }> {
+  ): Promise<{
+    payload: UserPayload;
+    accessToken: string;
+    refreshToken: string;
+  }> {
     return this.authService.register(email, password, displayName);
   }
 
@@ -19,7 +23,20 @@ export class AuthController {
   login(
     @Body('email') email: string,
     @Body('password') password: string,
-  ): Promise<{ payload: UserPayload; accessToken: string }> {
+  ): Promise<{
+    payload: UserPayload;
+    accessToken: string;
+    refreshToken: string;
+  }> {
     return this.authService.login(email, password);
+  }
+
+  @Post('refresh')
+  refreshToken(@Body('token') token: string): Promise<{
+    payload: UserPayload;
+    accessToken: string;
+    refreshToken: string;
+  }> {
+    return this.authService.refreshToken(token);
   }
 }

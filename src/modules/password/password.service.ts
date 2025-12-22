@@ -5,11 +5,11 @@ import bcrypt from 'bcryptjs';
 export class PasswordService {
   private readonly saltRounds = 10;
 
-  hash(password: string) {
-    return bcrypt.hash(password, this.saltRounds);
+  async hash(password: string) {
+    return await bcrypt.hash(password, this.saltRounds);
   }
 
-  compare(password: string, hash: string) {
-    return bcrypt.compare(password, hash);
+  async validate(password: string, hash: string) {
+    return await bcrypt.compare(password, hash);
   }
 }
