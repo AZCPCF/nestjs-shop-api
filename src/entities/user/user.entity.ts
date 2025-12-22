@@ -36,3 +36,5 @@ export interface UserPayload {
   isActive: boolean;
   role: UserEnum;
 }
+
+export type UserInRequest = Omit<User, 'password' | 'refreshToken'>;
