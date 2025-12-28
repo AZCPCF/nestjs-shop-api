@@ -4,6 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Sanitize } from 'src/common/shared/sanitize.service';
 import { Role, User, UserInRequest } from 'src/entities/user/user.entity';
 import { Repository } from 'typeorm';
 
@@ -11,12 +12,8 @@ import { Repository } from 'typeorm';
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepo: Repository<User>,
+    private readonly sanitize: Sanitize,
   ) {}
-
-  private async sanitizeUser(user: User | Promise<User>): Promise<UserInRequest> {
-    const { password, refreshToken, ...safeUser } = await user;
-    return safeUser;
-  }
 
   async create(
     email: string,
@@ -32,8 +29,14 @@ export class UserService {
     return await this.userRepo.save(user);
   }
 
-  async findOne(options: { inAuth: true; fields?: Partial<User> }): Promise<User>;
-  async findOne(options: { inAuth?: false; fields?: Partial<User> }): Promise<UserInRequest>;
+  async findOne(options: {
+    inAuth: true;
+    fields?: Partial<User>;
+  }): Promise<User>;
+  async findOne(options: {
+    inAuth?: false;
+    fields?: Partial<User>;
+  }): Promise<UserInRequest>;
 
   async findOne({
     inAuth,
@@ -49,7 +52,7 @@ export class UserService {
     if (inAuth) {
       return user;
     }
-    return this.sanitizeUser(user);
+    return this.sanitize.user(user);
   }
 
   async updateRefreshToken(user: User, refreshToken: string): Promise<User> {
@@ -63,6 +66,6 @@ export class UserService {
       throw new BadRequestException('displayName field is required');
     }
     user.displayName = displayName;
-    return this.sanitizeUser(this.userRepo.save(user));
+    return this.sanitize.user(this.userRepo.save(user));
   }
 }

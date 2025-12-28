@@ -7,13 +7,16 @@ import { CatalogModule } from './modules/catalog/catalog.module';
 import { OrderModule } from './modules/order/order.module';
 import { HealthModule } from './modules/health/health.module';
 import { JwtModule } from './modules/jwt/jwt.module';
+import { AdminModule } from './modules/admin/admin.module';
 import databaseConfig from './common/config/database.config';
 import jwtConfig from './common/config/jwt.config';
+import { SharedModule } from './common/shared/shared.module';
 
 const { NODE_ENV } = process.env;
 
 @Module({
   imports: [
+    SharedModule,
     ConfigModule.forRoot({
       envFilePath: `.env.${NODE_ENV}`,
       load: [databaseConfig, jwtConfig],
@@ -43,6 +46,7 @@ const { NODE_ENV } = process.env;
     OrderModule,
     HealthModule,
     JwtModule,
+    AdminModule,
   ],
 })
 export class AppModule {}

@@ -24,7 +24,7 @@ export class JwtService {
         secret: this.configService.get('jwt.refresh'),
       },
     );
-    
+
     if (!payload.sub) {
       throw new UnauthorizedException('Invalid Token');
     }
