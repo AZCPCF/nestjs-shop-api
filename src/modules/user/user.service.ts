@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User, UserEnum } from 'src/entities/user/user.entity';
+import { User, Roles } from 'src/entities/user/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class UserService {
     const user = this.userRepo.create({
       email,
       password,
-      role: UserEnum.USER,
+      role: Roles.USER,
       displayName,
     });
     return await this.userRepo.save(user);

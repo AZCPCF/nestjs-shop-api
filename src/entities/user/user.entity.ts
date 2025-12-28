@@ -1,6 +1,7 @@
+
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-export enum UserEnum {
+export enum Role {
   ADMIN = 'admin',
   USER = 'user',
 }
@@ -22,8 +23,8 @@ export class User {
   @Column({ default: true })
   isActive?: boolean;
 
-  @Column({ enum: UserEnum })
-  role: UserEnum;
+  @Column({ enum: Role })
+  role: Role;
 
   @Column({ nullable: true })
   refreshToken?: string;
@@ -34,7 +35,7 @@ export interface UserPayload {
   email: string;
   displayName: string;
   isActive: boolean;
-  role: UserEnum;
+  role: Role;
 }
 
 export type UserInRequest = Omit<User, 'password' | 'refreshToken'>;
