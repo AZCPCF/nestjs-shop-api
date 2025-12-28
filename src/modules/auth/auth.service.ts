@@ -37,7 +37,10 @@ export class AuthService {
 
     const accessToken = this.jwtService.generateAccessToken(payload);
     const refreshToken = this.jwtService.generateRefreshToken({ sub: user.id });
-    await this.userService.updateRefreshToken(user, await this.passwordService.hash(refreshToken));
+    await this.userService.updateRefreshToken(
+      user,
+      await this.passwordService.hash(refreshToken),
+    );
 
     return { payload, accessToken, refreshToken };
   }
@@ -50,7 +53,10 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   }> {
-    const user = await this.userService.findOne({ email });
+    const user = await this.userService.findOne({
+      fields: { email },
+      inAuth: true,
+    });
     const isValid = await this.passwordService.validate(
       password,
       user.password,
@@ -81,7 +87,10 @@ export class AuthService {
     refreshToken: string;
   }> {
     const { sub: id } = this.jwtService.verifyRefreshToken(token);
-    const user = await this.userService.findOne({ id });
+    const user = await this.userService.findOne({
+      inAuth: true,
+      fields: { id },
+    });
     const isValid = await this.passwordService.validate(
       token,
       user.refreshToken,
