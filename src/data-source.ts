@@ -1,6 +1,7 @@
 import { DataSource } from 'typeorm';
 import * as dotenv from 'dotenv';
 import { User } from './entities/user/user.entity';
+import { Category } from './entities/category/category.entity';
 
 const { NODE_ENV } = process.env;
 dotenv.config({ path: `.env.${NODE_ENV}` });
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
 
-  entities: [User],
+  entities: [User, Category],
 
   migrations:
     NODE_ENV === 'production'
