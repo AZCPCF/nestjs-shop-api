@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from './modules/auth/auth.module';
-import { UserModule } from './modules/user/user.module';
-import { CatalogModule } from './modules/catalog/catalog.module';
-import { OrderModule } from './modules/order/order.module';
-import { HealthModule } from './modules/health/health.module';
-import { JwtModule } from './modules/jwt/jwt.module';
-import { AdminModule } from './modules/admin/admin.module';
-import databaseConfig from './common/config/database.config';
-import jwtConfig from './common/config/jwt.config';
-import { SharedModule } from './common/shared/shared.module';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { UserModule } from './modules/user/user.module.js';
+import { OrderModule } from './modules/order/order.module.js';
+import { HealthModule } from './modules/health/health.module.js';
+import { JwtModule } from './modules/jwt/jwt.module.js';
+import { AdminModule } from './modules/admin/admin.module.js';
+import databaseConfig from './common/config/database.config.js';
+import jwtConfig from './common/config/jwt.config.js';
+import { SharedModule } from './common/shared/shared.module.js';
+import { CategoryModule } from './modules/category/category.module.js';
 
 const { NODE_ENV } = process.env;
 
@@ -42,11 +42,11 @@ const { NODE_ENV } = process.env;
     }),
     AuthModule,
     UserModule,
-    CatalogModule,
     OrderModule,
     HealthModule,
     JwtModule,
     AdminModule,
+    CategoryModule,
   ],
 })
 export class AppModule {}

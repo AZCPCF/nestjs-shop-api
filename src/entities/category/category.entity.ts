@@ -1,12 +1,14 @@
 import {
-  Column,
   Entity,
-  Index,
-  ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
+  Column,
+  Index,
+  Tree,
+  TreeChildren,
+  TreeParent,
 } from 'typeorm';
 
+@Tree('closure-table')
 @Entity('categories')
 export class Category {
   @PrimaryGeneratedColumn('uuid')
@@ -19,11 +21,9 @@ export class Category {
   @Column()
   slug: string;
 
-  @ManyToOne(() => Category, (category) => category.children, {
-    nullable: true,
-  })
+  @TreeParent()
   parent: Category;
 
-  @OneToMany(() => Category, (category) => category.parent)
+  @TreeChildren()
   children: Category[];
 }

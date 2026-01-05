@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import slugify from '@sindresorhus/slugify';
+import slugify from 'slugify';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class Slugify {
     field: keyof T,
     value: string,
   ): Promise<string> {
-    const baseSlug = slugify(value);
+    const baseSlug = slugify(value, { lower: true, strict: true, trim: true });
     let slug = baseSlug;
     let counter = 1;
 
