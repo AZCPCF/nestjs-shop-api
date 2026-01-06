@@ -11,6 +11,7 @@ import databaseConfig from './common/config/database.config.js';
 import jwtConfig from './common/config/jwt.config.js';
 import { SharedModule } from './common/shared/shared.module.js';
 import { CategoryModule } from './modules/category/category.module.js';
+import { ProductModule } from './modules/product/product.module';
 
 const { NODE_ENV } = process.env;
 
@@ -47,6 +48,7 @@ const { NODE_ENV } = process.env;
     JwtModule,
     AdminModule,
     CategoryModule,
+    ProductModule,
   ],
 })
 export class AppModule {}
