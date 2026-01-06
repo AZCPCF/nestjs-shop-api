@@ -6,7 +6,9 @@ import {
   Tree,
   TreeChildren,
   TreeParent,
+  OneToMany,
 } from 'typeorm';
+import { Product } from '../product/product.entity';
 
 @Tree('closure-table')
 @Entity('categories')
@@ -26,4 +28,7 @@ export class Category {
 
   @TreeChildren()
   children: Category[];
+
+  @OneToMany(() => Product, (product) => product.category)
+  products: Product[];
 }
