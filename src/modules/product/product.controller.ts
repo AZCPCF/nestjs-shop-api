@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -10,6 +11,7 @@ import {
   Query,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/common/decorators/roles.decorator';
@@ -21,7 +23,9 @@ import { Role } from 'src/entities/user/user.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
+import { ProductFilterDto } from './dto/product-filter.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('product')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
@@ -37,16 +41,14 @@ export class ProductController {
   @UseGuards(OptionalJwtAuthGuard)
   getProducts(
     @Req() { user }: Request,
-    @Query() pagination: PaginationDto,
+    @Query() queries: PaginationDto & ProductFilterDto,
   ): Promise<Paginated<Product>> {
-    if (user?.role === Role.ADMIN) {
-      return this.productService.findAll({}, { pagination });
-    }
-
-    return this.productService.findAll(
-      { status: ProductStatus.PUBLISHED },
-      { pagination },
-    );
+    const { page, limit, ...filter } = queries;
+    return this.productService.findAll({
+      filter,
+      pagination: { page, limit },
+      isAdmin: user?.role === Role.ADMIN,
+    });
   }
 
   @Get(':id')

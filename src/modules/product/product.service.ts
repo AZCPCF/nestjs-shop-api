@@ -7,12 +7,15 @@ import { CategoryService } from '../category/category.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Paginated, PaginationDto } from 'src/common/dto/pagination.dto';
+import { ProductQueryService } from './product-query.service';
+import { ProductFilterDto } from './dto/product-filter.dto';
 
 @Injectable()
 export class ProductService {
   constructor(
     private readonly categoryService: CategoryService,
     private readonly slugify: Slugify,
+    private readonly productQueryService: ProductQueryService,
     @InjectRepository(Product)
     private readonly productRepo: Repository<Product>,
   ) {}
@@ -34,22 +37,20 @@ export class ProductService {
     return this.productRepo.save(product);
   }
 
-  async findAll(
-    fields?: Partial<Product>,
-    options?: { pagination?: PaginationDto },
-  ): Promise<Paginated<Product>> {
-    const { pagination } = options;
-    const { page, limit } = pagination;
-    const skip = (page - 1) * limit;
+  async findAll(options?: {
+    filter?: ProductFilterDto;
+    pagination?: PaginationDto;
+    isAdmin: boolean;
+  }): Promise<Paginated<Product>> {
+    const qb = this.productQueryService.buildQuery(options);
 
-    const [items, total] = await this.productRepo.findAndCount({
-      where: fields,
-      take: limit,
-      skip,
-    });
+    const [data, total] = await qb.getManyAndCount();
+
+    const page = options.pagination?.page ?? 1;
+    const limit = options.pagination?.limit ?? 10;
 
     return {
-      data: items,
+      data,
       meta: {
         total,
         page,

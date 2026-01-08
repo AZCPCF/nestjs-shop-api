@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -8,6 +9,7 @@ import {
   Patch,
   Post,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CategoryService } from './category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
@@ -18,6 +20,7 @@ import { Role } from 'src/entities/user/user.entity';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { Category } from 'src/entities/category/category.entity';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('category')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}

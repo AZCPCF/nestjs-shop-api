@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Transform } from 'class-transformer';
+import { DateResponse } from '../../common/utils/date-response';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum Role {
   ADMIN = 'admin',
@@ -27,6 +35,18 @@ export class User {
 
   @Column({ nullable: true })
   refreshToken?: string;
+
+  @CreateDateColumn()
+  @Transform(({ value }) => DateResponse.from(value), {
+    toPlainOnly: true,
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Transform(({ value }) => DateResponse.from(value), {
+    toPlainOnly: true,
+  })
+  updatedAt: Date;
 }
 
 export interface UserPayload {
@@ -37,4 +57,10 @@ export interface UserPayload {
   role: Role;
 }
 
-export type UserInRequest = Omit<User, 'password' | 'refreshToken'>;
+export type UserInRequest<T=Date> = Omit<
+  User,
+  'password' | 'refreshToken' | 'createdAt' | 'updatedAt'
+> & {
+  createdAt: T;
+  updatedAt: T;
+};
