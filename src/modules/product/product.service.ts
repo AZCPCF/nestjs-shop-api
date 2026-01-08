@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { CategoryService } from '../category/category.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { Paginated, PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Injectable()
 export class ProductService {
@@ -33,11 +34,33 @@ export class ProductService {
     return this.productRepo.save(product);
   }
 
-  async findAll(): Promise<Product[]> {
-    return await this.productRepo.find();
+  async findAll(
+    fields?: Partial<Product>,
+    options?: { pagination?: PaginationDto },
+  ): Promise<Paginated<Product>> {
+    const { pagination } = options;
+    const { page, limit } = pagination;
+    const skip = (page - 1) * limit;
+
+    const [items, total] = await this.productRepo.findAndCount({
+      where: fields,
+      take: limit,
+      skip,
+    });
+
+    return {
+      data: items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
-  async findOne(id: string): Promise<Product> {
-    const product = await this.productRepo.findOneBy({ id });
+
+  async findOne(fields?: Partial<Product>): Promise<Product> {
+    const product = await this.productRepo.findOneBy(fields);
     if (!product) {
       throw new NotFoundException('product not found');
     }
@@ -45,7 +68,7 @@ export class ProductService {
   }
 
   async update(id: string, dto: UpdateProductDto): Promise<Product> {
-    const product = await this.findOne(id);
+    const product = await this.findOne({ id });
 
     const { title, categoryId, ...rest } = dto;
     Object.assign(product, rest);
@@ -74,7 +97,7 @@ export class ProductService {
   }
 
   async remove(id: string): Promise<void> {
-    const product = await this.findOne(id);
+    const product = await this.findOne({ id });
     await this.productRepo.remove(product);
   }
 }
