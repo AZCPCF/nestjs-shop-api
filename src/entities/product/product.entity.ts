@@ -1,5 +1,14 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Category } from '../category/category.entity';
+import { Transform } from 'class-transformer';
+import { DateResponse } from '../../common/utils/date-response';
 
 export enum ProductStatus {
   DRAFT = 'draft',
@@ -31,4 +40,16 @@ export class Product {
     eager: true,
   })
   category: Category;
+
+  @CreateDateColumn()
+  @Transform(({ value }) => DateResponse.from(value), {
+    toPlainOnly: true,
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  @Transform(({ value }) => DateResponse.from(value), {
+    toPlainOnly: true,
+  })
+  updatedAt: Date;
 }
