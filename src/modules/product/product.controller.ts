@@ -41,26 +41,31 @@ export class ProductController {
   @UseGuards(OptionalJwtAuthGuard)
   getProducts(
     @Req() { user }: Request,
-    @Query() queries: PaginationDto & ProductFilterDto,
+    @Query() queries: ProductFilterDto,
   ): Promise<Paginated<Product>> {
-    const { page, limit, ...filter } = queries;
+    const { sort, page, limit, ...filter } = queries;
+
     return this.productService.findAll({
       filter,
       pagination: { page, limit },
+      sort: { sort },
       isAdmin: user?.role === Role.ADMIN,
     });
   }
 
-  @Get(':id')
+  @Get(':slug')
   @UseGuards(OptionalJwtAuthGuard)
   getProduct(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('slug') slug: string,
     @Req() { user }: Request,
   ): Promise<Product> {
     if (user?.role === Role.ADMIN) {
-      return this.productService.findOne({ id });
+      return this.productService.findOne({ slug });
     }
-    return this.productService.findOne({ id, status: ProductStatus.PUBLISHED });
+    return this.productService.findOne({
+      slug,
+      status: ProductStatus.PUBLISHED,
+    });
   }
 
   @Patch(':id')
