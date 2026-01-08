@@ -57,7 +57,7 @@ export interface UserPayload {
   role: Role;
 }
 
-export type UserInRequest<T=Date> = Omit<
+export type UserInRequest<T = Date> = Omit<
   User,
   'password' | 'refreshToken' | 'createdAt' | 'updatedAt'
 > & {

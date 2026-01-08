@@ -15,15 +15,15 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Roles } from 'src/common/decorators/roles.decorator';
-import { Paginated, PaginationDto } from 'src/common/dto/pagination.dto';
+import { Paginated } from 'src/common/dto/pagination.dto';
 import { OptionalJwtAuthGuard } from 'src/common/guards/optional-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { Product, ProductStatus } from 'src/entities/product/product.entity';
 import { Role } from 'src/entities/user/user.entity';
 import { CreateProductDto } from './dto/create-product.dto';
+import { ProductFilterDto } from './dto/product-filter.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductService } from './product.service';
-import { ProductFilterDto } from './dto/product-filter.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('product')
