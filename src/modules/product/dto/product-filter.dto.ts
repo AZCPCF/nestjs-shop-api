@@ -1,7 +1,8 @@
-import { IsOptional, IsString, Min, IsNumber, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsNumber, IsOptional, IsString, IsUUID, Min } from 'class-validator';
+import { ProductSortDto } from './product-sort.dto';
 
-export class ProductFilterDto {
+export class ProductFilterDto extends ProductSortDto {
   @IsOptional()
   @Type(() => Number)
   @IsNumber()

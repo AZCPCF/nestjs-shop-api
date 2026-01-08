@@ -9,6 +9,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { Paginated, PaginationDto } from 'src/common/dto/pagination.dto';
 import { ProductQueryService } from './product-query.service';
 import { ProductFilterDto } from './dto/product-filter.dto';
+import { ProductSortDto } from './dto/product-sort.dto';
 
 @Injectable()
 export class ProductService {
@@ -40,6 +41,7 @@ export class ProductService {
   async findAll(options?: {
     filter?: ProductFilterDto;
     pagination?: PaginationDto;
+    sort?: ProductSortDto;
     isAdmin: boolean;
   }): Promise<Paginated<Product>> {
     const qb = this.productQueryService.buildQuery(options);
